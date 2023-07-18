@@ -79,18 +79,6 @@ class BayutSpiderSpider(scrapy.Spider):
             } 
             yield data
 
-            for url in property_listings:
-              yield response.follow(url,callback=self.parse)
-              self.property_count += 1
-
-            if self.property_count >= self.max_properties:
-              return
-
-            next_page = response.css('[title="Next"]::attr(href)').get()
-            if next_page is not None and self.property_count < self.max_properties:
-              next_url = 'https://www.bayut.com' + next_page
-              yield response.follow(next_url, callback=self.parse)
-          
         filename = 'property_data.json'
         with open(filename, 'w') as file:
             json.dump(self.data, file)
